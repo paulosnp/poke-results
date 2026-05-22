@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html, body, #root {
+    height: 100%;
+    overflow: hidden;
+  }
   body {
     @apply antialiased font-sans bg-slate-950 text-slate-50 selection:bg-pokemon-yellow selection:text-pokemon-darkBlue;
   }

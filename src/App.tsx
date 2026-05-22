@@ -31,21 +31,21 @@ export default function App() {
     <>
       <div 
         onClick={() => status !== 'playing' && initGame()} 
-        className={`w-16 h-16 rounded-full bg-gradient-to-tr from-pokemon-red via-pokemon-red to-red-400 p-1 flex items-center justify-center shadow-lg shadow-pokemon-red/35 cursor-pointer hover:rotate-12 transition-transform duration-300 ${status === 'playing' ? 'animate-bounce-slow' : ''}`}
+        className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-pokemon-red via-pokemon-red to-red-400 p-1 flex items-center justify-center shadow-lg shadow-pokemon-red/35 cursor-pointer hover:rotate-12 transition-transform duration-300 ${status === 'playing' ? 'animate-bounce-slow' : ''}`}
       >
         <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center relative overflow-hidden">
           <div className="absolute top-0 w-full h-1/2 bg-pokemon-red/90" />
           <div className="absolute bottom-0 w-full h-1/2 bg-slate-100" />
           <div className="absolute w-full h-1.5 bg-slate-950" />
-          <div className="absolute w-5 h-5 rounded-full bg-slate-950 flex items-center justify-center">
-            <div className="w-2.5 h-2.5 rounded-full bg-slate-100" />
+          <div className="absolute w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-slate-950 flex items-center justify-center">
+            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-100" />
           </div>
         </div>
       </div>
-      <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-pokemon-red via-pokemon-yellow to-pokemon-blue bg-clip-text text-transparent mt-4">
+      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-pokemon-red via-pokemon-yellow to-pokemon-blue bg-clip-text text-transparent mt-3 sm:mt-4">
         Poke Results
       </h1>
-      <p className="text-slate-400 text-xs mt-1 uppercase tracking-widest font-bold">
+      <p className="text-slate-400 text-[10px] sm:text-xs mt-1 uppercase tracking-widest font-bold">
         Adivinhe o Pokémon Oculto
       </p>
     </>

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PokemonData } from '../../../types/pokemon';
 
@@ -8,6 +9,54 @@ interface HiddenPokemonRevealProps {
 
 export function HiddenPokemonReveal({ pokemon, status }: HiddenPokemonRevealProps) {
   const isRevealed = status !== 'playing';
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    let active = true;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default || '';
+
+    img.onload = () => {
+      if (!active) return;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Scale to fit nicely with padding
+      const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.95;
+      const w = img.width * scale;
+      const h = img.height * scale;
+      const x = (canvas.width - w) / 2;
+      const y = (canvas.height - h) / 2;
+
+      // Draw image
+      ctx.drawImage(img, x, y, w, h);
+
+      if (!isRevealed) {
+        // Obscure image in canvas memory by physically overwriting colored pixels with a flat slate-400 silhouette
+        ctx.globalCompositeOperation = 'source-in';
+        ctx.fillStyle = '#94a3b8'; // Visually appealing slate-400 gray for clear visibility
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+    };
+
+    img.onerror = () => {
+      if (!active) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    return () => {
+      active = false;
+    };
+  }, [pokemon, isRevealed]);
 
   return (
     <div 
@@ -33,18 +82,19 @@ export function HiddenPokemonReveal({ pokemon, status }: HiddenPokemonRevealProp
           className="absolute inset-0 rounded-full border border-transparent transition-all duration-1000"
         />
 
-        <motion.img
-          initial={{ filter: 'brightness(0) contrast(200)', scale: 0.85 }}
+        <motion.canvas
+          ref={canvasRef}
+          width={300}
+          height={300}
+          initial={{ scale: 0.85 }}
           animate={{
-            filter: isRevealed ? 'none' : 'brightness(0) contrast(200)',
             scale: isRevealed ? 1.05 : 0.85,
             rotate: isRevealed ? [0, -5, 5, 0] : 0
           }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
-          src={pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default || ''}
-          alt={isRevealed ? `Arte oficial do Pokémon revelado: ${pokemon.name}` : 'Silhueta escura do Pokémon Oculto'}
-          loading="lazy"
           className="w-36 h-36 object-contain z-10 drop-shadow-[0_12px_24px_rgba(0,0,0,0.4)]"
+          role="img"
+          aria-label={isRevealed ? `Arte oficial do Pokémon revelado: ${pokemon.name}` : 'Silhueta escura do Pokémon Oculto'}
         />
       </div>
 
