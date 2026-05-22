@@ -5,9 +5,10 @@ import { PokemonData } from '../../../types/pokemon';
 interface HiddenPokemonRevealProps {
   pokemon: PokemonData;
   status: 'playing' | 'won' | 'lost';
+  onPlayAgain?: () => void;
 }
 
-export function HiddenPokemonReveal({ pokemon, status }: HiddenPokemonRevealProps) {
+export function HiddenPokemonReveal({ pokemon, status, onPlayAgain }: HiddenPokemonRevealProps) {
   const isRevealed = status !== 'playing';
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -127,7 +128,7 @@ export function HiddenPokemonReveal({ pokemon, status }: HiddenPokemonRevealProp
             </div>
 
             {/* Extra details when revealed */}
-            <div className="grid grid-cols-2 gap-4 w-full mt-6 pt-5 border-t border-slate-800/80 text-center">
+            <div className="grid grid-cols-2 gap-4 w-full mt-4 pt-4 border-t border-slate-800/80 text-center">
               <div>
                 <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">Peso</p>
                 <p className="text-sm font-semibold text-slate-200 mt-0.5">{pokemon.weight / 10} kg</p>
@@ -137,6 +138,25 @@ export function HiddenPokemonReveal({ pokemon, status }: HiddenPokemonRevealProp
                 <p className="text-sm font-semibold text-slate-200 mt-0.5">{pokemon.height / 10} m</p>
               </div>
             </div>
+
+            {/* Victory / Defeat message and Play Again button */}
+            {onPlayAgain && (
+              <div className="w-full mt-4 pt-4 border-t border-slate-800/80 flex flex-col items-center">
+                <h3 className={`text-base font-black tracking-wide ${status === 'won' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  {status === 'won' ? 'Parabéns! Você adivinhou!' : 'Fim de Jogo!'}
+                </h3>
+                <p className="text-slate-400 text-[10px] mt-0.5">
+                  {status === 'won' ? 'Sua mente Pokémon é impressionante!' : 'Mais sorte na próxima rodada.'}
+                </p>
+                
+                <button
+                  onClick={() => onPlayAgain()}
+                  className="w-full mt-3.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all duration-200 focus:outline-none active:scale-[0.98] shadow-lg shadow-slate-950/40"
+                >
+                  Jogar Novamente
+                </button>
+              </div>
+            )}
           </motion.div>
         ) : (
           <p className="text-slate-400 text-sm font-semibold animate-pulse tracking-wide mt-2">

@@ -75,7 +75,7 @@ export default function App() {
       {/* Target Pokemon Display (Silhouette / Revealed card) */}
       {targetPokemon && !isLoading && (
         <div className="w-full flex justify-center mb-8">
-          <HiddenPokemonReveal pokemon={targetPokemon} status={status} />
+          <HiddenPokemonReveal pokemon={targetPokemon} status={status} onPlayAgain={() => initGame()} />
         </div>
       )}
 
@@ -95,31 +95,6 @@ export default function App() {
           </div>
           <GuessInput onGuess={handleGuessSubmit} disabled={isLoading} />
         </div>
-      )}
-
-      {/* Game Over Controls (Won / Lost) */}
-      {targetPokemon && status !== 'playing' && (
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-3xl p-6 w-full max-w-md text-center mb-8 border border-slate-800 shadow-2xl relative overflow-hidden"
-        >
-          <div className={`absolute top-0 inset-x-0 h-1 ${status === 'won' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
-          
-          <h2 className={`text-xl font-extrabold tracking-wide ${status === 'won' ? 'text-emerald-400' : 'text-rose-400'}`}>
-            {status === 'won' ? 'Parabéns! Você adivinhou o Pokémon!' : `Game Over! O Pokémon era ${targetPokemon.name}`}
-          </h2>
-          <p className="text-slate-400 text-xs mt-1">
-            {status === 'won' ? 'Sua mente Pokémon é impressionante!' : 'Mais sorte na próxima rodada.'}
-          </p>
-
-          <button
-            onClick={() => initGame()}
-            className="w-full mt-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl transition-all duration-200 focus:outline-none active:scale-[0.98]"
-          >
-            Jogar Novamente
-          </button>
-        </motion.div>
       )}
 
       {/* Historic Guess Results list */}
